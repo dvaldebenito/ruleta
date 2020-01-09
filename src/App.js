@@ -32,6 +32,14 @@ const App = () => {
     {
       name: "Hervoy",
       image: "img/hervoy.webp"
+    },
+    {
+      name: "Felipe",
+      image: "img/felipe.webp"
+    },
+    {
+      name: "Diego",
+      image: "img/pikachu.png"
     }
   ]
 

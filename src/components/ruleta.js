@@ -14,7 +14,7 @@ const Ruleta = ({ items }) => {
     let ctx;
 
     const byte2Hex = (n) => {
-        var nybHexString = "0123456789ABCDEF";
+        const nybHexString = "0123456789ABCDEF";
         return String(nybHexString.substr((n >> 4) & 0x0F, 1)) + nybHexString.substr(n & 0x0F, 1);
     }
 
@@ -23,24 +23,24 @@ const Ruleta = ({ items }) => {
     }
 
     const getColor = (item, maxitem) => {
-        var phase = 0;
-        var center = 128;
-        var width = 127;
-        var frequency = Math.PI * 2 / maxitem;
+        const phase = 0;
+        const center = 128;
+        const width = 127;
+        const frequency = Math.PI * 2 / maxitem;
 
-        let red = Math.sin(frequency * item + 2 + phase) * width + center;
-        let green = Math.sin(frequency * item + 0 + phase) * width + center;
-        let blue = Math.sin(frequency * item + 4 + phase) * width + center;
+        const red = Math.sin(frequency * item + 2 + phase) * width + center;
+        const green = Math.sin(frequency * item + 0 + phase) * width + center;
+        const blue = Math.sin(frequency * item + 4 + phase) * width + center;
 
         return RGB2Color(red, green, blue);
     }
 
     const drawRouletteWheel = () => {
-        var canvas = canvasref.current
+        const canvas = canvasref.current
         if (canvas.getContext) {
-            var outsideRadius = 200;
-            var textRadius = 160;
-            var insideRadius = 125;
+            const outsideRadius = 200;
+            const textRadius = 160;
+            const insideRadius = 125;
 
             ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, 500, 500);
@@ -48,8 +48,8 @@ const Ruleta = ({ items }) => {
             ctx.strokeStyle = "black";
             ctx.lineWidth = 2;
 
-            for (var i = 0; i < items.length; i++) {
-                var angle = startAngle + i * arc;
+            for (let i = 0; i < items.length; i++) {
+                const angle = startAngle + i * arc;
                 drawRoulette(ctx, outsideRadius, insideRadius, angle, arc, i, items.length)
                 putText(ctx, items[i].name, angle, arc, textRadius)
                 
@@ -101,7 +101,7 @@ const Ruleta = ({ items }) => {
     const spin = () => {
         const spinAngleStart = Math.random() * 10 + 10;
         spinTime = 0;
-        spinTimeTotal = Math.random() * 3 + 4 * 1000;
+        spinTimeTotal = Math.random() * 3 + 10 * 1000;
         rotateWheel(spinAngleStart);
     }
 
@@ -111,7 +111,7 @@ const Ruleta = ({ items }) => {
             stopRotateWheel();
             return;
         }
-        var spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+        const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
         startAngle += (spinAngle * Math.PI / 180);
         drawRouletteWheel();
         spinTimeout = setTimeout(() => rotateWheel(spinAngleStart), 30);
@@ -119,11 +119,10 @@ const Ruleta = ({ items }) => {
 
     const stopRotateWheel = () => {
         clearTimeout(spinTimeout);
-        var degrees = startAngle * 180 / Math.PI + 90;
-        var arcd = arc * 180 / Math.PI;
-        var index = Math.floor((360 - degrees % 360) / arcd);
+        const degrees = startAngle * 180 / Math.PI + 90;
+        const arcd = arc * 180 / Math.PI;
+        const index = Math.floor((360 - degrees % 360) / arcd);
         ctx.save();        
-        var text = items[index].name
         ctx.font = "24px Arial"
         const base_image = new Image();
         base_image.src = items[index].image;
@@ -139,13 +138,11 @@ const Ruleta = ({ items }) => {
         ctx.restore();
     }
 
-    const scalePreserveAspectRatio = (imgW,imgH,maxW,maxH) => {
-        return(Math.min((maxW/imgW),(maxH/imgH)));
-      }
+    const scalePreserveAspectRatio = (imgW,imgH,maxW,maxH) => (Math.min((maxW/imgW),(maxH/imgH)));
 
     const easeOut = (t, b, c, d) => {
-        var ts = (t /= d) * t;
-        var tc = ts * t;
+        const ts = (t /= d) * t;
+        const tc = ts * t;
         return b + c * (tc + -3 * ts + 3 * t);
     }
 
