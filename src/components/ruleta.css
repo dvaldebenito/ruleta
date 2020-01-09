@@ -1,0 +1,20 @@
+
+
+.button--primary {
+    width: 160px!important;
+    text-align: center!important;
+    color: white!important;
+    font-size: 1.2rem!important;
+    font-weight: bold!important;
+    padding: 0.75rem!important;
+    background-color: #F42534!important;
+    text-decoration: none!important;
+    margin: 0 auto;
+    -webkit-border-radius: 50!important;
+    -moz-border-radius: 50!important;
+    border-radius: 6px!important;
+    cursor: pointer!important;
+
+    margin: 0 auto; 
+    display: block;
+}
