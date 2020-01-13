@@ -1,9 +1,9 @@
-import React, { useRef, useEffect } from 'react';
-
+import React, { useRef, useEffect, useState } from 'react';
+import ItemsService from '../services/ruletaService';
 import './ruleta.css'
 
-const Ruleta = ({ items }) => {
-
+const Ruleta = () => {
+    const [items, setItems] = useState([]);
     let startAngle = 0;
     let arc = Math.PI / (items.length / 2);
     let spinTimeout = null;
@@ -47,7 +47,7 @@ const Ruleta = ({ items }) => {
 
             ctx.strokeStyle = "black";
             ctx.lineWidth = 2;
-
+            //console.log(items)
             for (let i = 0; i < items.length; i++) {
                 const angle = startAngle + i * arc;
                 drawRoulette(ctx, outsideRadius, insideRadius, angle, arc, i, items.length)
@@ -117,24 +117,35 @@ const Ruleta = ({ items }) => {
         spinTimeout = setTimeout(() => rotateWheel(spinAngleStart), 30);
     }
 
-    const stopRotateWheel = () => {
+    const stopRotateWheel = async () => {
         clearTimeout(spinTimeout);
         const degrees = startAngle * 180 / Math.PI + 90;
         const arcd = arc * 180 / Math.PI;
         const index = Math.floor((360 - degrees % 360) / arcd);
+        const item = items[index];
+        await ItemsService.changeStatusItems(item, false);
+        await getItems();
+        const itms = await ItemsService.getItems();
+        console.log(itms, items)
+        if (items.length === 1) {
+            itms.forEach(async itm => {
+                await ItemsService.changeStatusItems(itm, true);
+            })
+            await setItems(itms)
+        }
+
         ctx.save();        
         ctx.font = "24px Arial"
         const base_image = new Image();
-        base_image.src = items[index].image;
-        base_image.onload = () => {
-            ctx.width=180;
-            ctx.height=180;
+        base_image.src = item.image;
+        base_image.onload = async () => {
+            ctx.width=380;
+            ctx.height=380;
             const w = base_image.width;
             const h = base_image.height;
             const sizer = scalePreserveAspectRatio(w,h,ctx.width,ctx.height);
-            ctx.drawImage(base_image,0,0,w,h,160,160,w*sizer,h*sizer);
+            ctx.drawImage(base_image,0,0,w,h,60,60,w*sizer,h*sizer);
         }
-        //ctx.fillText(text, 250 - ctx.measureText(text).width / 2, 250 + 10);
         ctx.restore();
     }
 
@@ -149,9 +160,20 @@ const Ruleta = ({ items }) => {
 
     const canvasref = useRef();
 
+    const getItems = async () => {
+        const items = await ItemsService.getItems();
+        await setItems(items.filter(item => item.active === true))
+    }
+
+    useEffect(()=>{
+        getItems();
+    },[]);
+
     useEffect(() => {
         drawRouletteWheel()
     });
+
+    
 
     return (
         <div className="ruleta">

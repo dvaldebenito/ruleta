@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "name": "Álvaro",
+      "image": "img/alvarito2.webp",
+      "active": true
+    },
+    {
+      "name": "Dámaris",
+      "image": "img/damaris.webp",
+      "active": true
+    },
+    {
+      "name": "Carlitos",
+      "image": "img/carlitos.webp",
+      "active": true
+    },
+    {
+      "name": "Jo",
+      "image": "img/jo.webp",
+      "active": true
+    },
+    {
+      "name": "Daniel",
+      "image": "img/daniel.webp",
+      "active": true
+    },
+    {
+      "name": "Seba",
+      "image": "img/seba.webp",
+      "active": true
+    },
+    {
+      "name": "Hervoy",
+      "image": "img/hervoy.webp",
+      "active": true
+    },
+    {
+      "name": "Felipe",
+      "image": "img/felipe.webp",
+      "active": true
+    },
+    {
+      "name": "Diego",
+      "image": "img/pikachu.png",
+      "active": true  
+    }
+  ]
+}
