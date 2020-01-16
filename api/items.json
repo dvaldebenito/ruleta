@@ -4,55 +4,93 @@
       "id": 1,
       "name": "Álvaro",
       "image": "img/alvarito2.webp",
-      "active": true
+      "active": false
     },
     {
       "id": 2,
       "name": "Dámaris",
       "image": "img/damaris.webp",
-      "active": true
+      "active": false
     },
     {
       "id": 3,
       "name": "Carlitos",
       "image": "img/carlitos.webp",
-      "active": true
+      "active": false
     },
     {
       "id": 4,
       "name": "Jo",
       "image": "img/jo.webp",
-      "active": true
+      "active": false
     },
     {
       "id": 5,
       "name": "Daniel",
       "image": "img/daniel.webp",
-      "active": true
+      "active": false
     },
     {
       "id": 6,
       "name": "Seba",
       "image": "img/seba.webp",
-      "active": true
+      "active": false
     },
     {
       "name": "Hervoy",
       "image": "img/hervoy.webp",
-      "active": true,
+      "active": false,
       "id": 7
     },
     {
       "id": 8,
       "name": "Felipe",
       "image": "img/felipe.webp",
-      "active": true
+      "active": false
     },
     {
       "id": 9,
       "name": "Diego",
       "image": "img/pikachu.png",
       "active": false
-    }
+    },
+    [
+      {
+        "id": 4,
+        "name": "Jo",
+        "image": "img/jo.webp",
+        "active": true
+      },
+      {
+        "id": 5,
+        "name": "Daniel",
+        "image": "img/daniel.webp",
+        "active": true
+      },
+      {
+        "id": 6,
+        "name": "Seba",
+        "image": "img/seba.webp",
+        "active": true
+      },
+      {
+        "name": "Hervoy",
+        "image": "img/hervoy.webp",
+        "active": true,
+        "id": 7
+      },
+      {
+        "id": 8,
+        "name": "Felipe",
+        "image": "img/felipe.webp",
+        "active": true
+      },
+      {
+        "id": 9,
+        "name": "Diego",
+        "image": "img/pikachu.png",
+        "active": true
+      }
+    ]
   ]
 }

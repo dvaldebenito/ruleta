@@ -1,9 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
+import axios from 'axios';
 import ItemsService from '../services/ruletaService';
 import './ruleta.css'
 
 const Ruleta = () => {
     const [items, setItems] = useState([]);
+    const [btnState, setBtnState] = useState(true);
+    const itemService = ItemsService({axios, urlBase: 'https://api-roulette.herokuapp.com/roulette'});
     let startAngle = 0;
     let arc = Math.PI / (items.length / 2);
     let spinTimeout = null;
@@ -101,7 +104,7 @@ const Ruleta = () => {
     const spin = () => {
         const spinAngleStart = Math.random() * 10 + 10;
         spinTime = 0;
-        spinTimeTotal = Math.random() * 3 + 10 * 1000;
+        spinTimeTotal = Math.random() * 3 + 4 * 1000;
         rotateWheel(spinAngleStart);
     }
 
@@ -123,30 +126,33 @@ const Ruleta = () => {
         const arcd = arc * 180 / Math.PI;
         const index = Math.floor((360 - degrees % 360) / arcd);
         const item = items[index];
-        await ItemsService.changeStatusItems(item, false);
-        await getItems();
-        const itms = await ItemsService.getItems();
-        console.log(itms, items)
-        if (items.length === 1) {
-            itms.forEach(async itm => {
-                await ItemsService.changeStatusItems(itm, true);
-            })
-            await setItems(itms)
-        }
-
+        console.log(item)
+        await itemService.changeStatusItems(item, false);
         ctx.save();        
         ctx.font = "24px Arial"
         const base_image = new Image();
-        base_image.src = item.image;
+        base_image.src = item.url;
         base_image.onload = async () => {
-            ctx.width=380;
-            ctx.height=380;
+            ctx.width=180;
+            ctx.height=180;
             const w = base_image.width;
             const h = base_image.height;
             const sizer = scalePreserveAspectRatio(w,h,ctx.width,ctx.height);
-            ctx.drawImage(base_image,0,0,w,h,60,60,w*sizer,h*sizer);
+            ctx.drawImage(base_image,0,0,w,h,160,160,w*sizer,h*sizer);
+            setBtnState(false);
         }
         ctx.restore();
+    }
+
+    const cleanRoulette = async () => {
+        try {
+
+            await setBtnState(true);
+            const its = await getItems();
+            await restartItems(its);
+        } catch (error) {
+            console.log(`ERROR =>`, error.message)
+        }
     }
 
     const scalePreserveAspectRatio = (imgW,imgH,maxW,maxH) => (Math.min((maxW/imgW),(maxH/imgH)));
@@ -161,8 +167,18 @@ const Ruleta = () => {
     const canvasref = useRef();
 
     const getItems = async () => {
-        const items = await ItemsService.getItems();
-        await setItems(items.filter(item => item.active === true))
+        const items = await itemService.getItemsActives();
+        console.log(items)
+        await setItems(items)
+        return items
+    }
+
+    const restartItems = async (its) => {
+        console.log('restartItems', its.length)
+        if (its.length === 0) {
+            await itemService.activeAllItems()
+            await getItems();
+        }
     }
 
     useEffect(()=>{
@@ -171,7 +187,7 @@ const Ruleta = () => {
 
     useEffect(() => {
         drawRouletteWheel()
-    });
+    }, [items]);
 
     
 
@@ -183,10 +199,14 @@ const Ruleta = () => {
                 width="500"
                 height="500"
             ></canvas>
-            <button
+            {btnState?<button
                 className={"button--primary"}
                 onClick={() => spin()}
-            >Girar</button>
+            >Girar</button>:
+            <button
+                className={"button--primary"}
+                onClick={() => cleanRoulette()}
+            >Limpiar</button>}
         </div>
     )
 }

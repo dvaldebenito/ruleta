@@ -1,24 +1,49 @@
-import axios from 'axios';
+import RuletaRepository from '../repository/ruletaRepository'
 
-const ItemsService = {}
+const ItemsService = ({ axios, urlBase }) => {
+    const ruletaRepository = RuletaRepository({ axios, urlBase });
 
-ItemsService.getItems = async () => {
-    try {
-        const response = await axios.get('http://localhost:9000/items');
-        return response.data; 
-    } catch (error) {
-        console.log('ERROR =>', error.message)
-        return []
+    const getItemsActives = async () => {
+        try {
+            return await ruletaRepository.getItemsActives();
+        } catch (error) {
+            console.log('ERROR =>', error.message)
+            return []
+        }
     }
-}
+    
+    const changeStatusItems = async (item, state) => {
+        try {
+            return await ruletaRepository.changeStatusItems({ ...item, active: state })
+        } catch (error) {
+            console.log('ERROR =>', error.message)
+            return 0
+        }
+    }
 
-ItemsService.changeStatusItems = async (item, state) => {
-    try {
-        console.log(item, state)
-        await axios.put(`http://localhost:9000/items/${item.id}`, { ...item, active: state })
-    } catch (error) {
-        console.log('ERROR =>', error.message)
-        return 0
+    const getAllItems = async () => {
+        try {
+            return await ruletaRepository.getAllItems();
+        } catch (error) {
+            console.log('ERROR =>', error.message)
+            return []
+        }
+    }
+
+    const activeAllItems = async () => {
+        try {
+            return await ruletaRepository.activeAllItems();
+        } catch (error) {
+            console.log('ERROR =>', error.message)
+            return []
+        }
+    }
+
+    return {
+        getItemsActives,
+        changeStatusItems,
+        getAllItems,
+        activeAllItems
     }
 }
 
