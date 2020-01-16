@@ -2,10 +2,12 @@ import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import ItemsService from '../services/ruletaService';
 import './ruleta.css'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 
 const Ruleta = () => {
     const [items, setItems] = useState([]);
     const [btnState, setBtnState] = useState(true);
+    const [item, setItem] = useState({});
     const itemService = ItemsService({axios, urlBase: 'https://api-roulette.herokuapp.com/roulette'});
     let startAngle = 0;
     let arc = Math.PI / (items.length / 2);
@@ -125,13 +127,14 @@ const Ruleta = () => {
         const degrees = startAngle * 180 / Math.PI + 90;
         const arcd = arc * 180 / Math.PI;
         const index = Math.floor((360 - degrees % 360) / arcd);
-        const item = items[index];
+        const itm = items[index];
+        setItem(itm)
         console.log(item)
-        await itemService.changeStatusItems(item, false);
+        
         ctx.save();        
         ctx.font = "24px Arial"
         const base_image = new Image();
-        base_image.src = item.url;
+        base_image.src = itm.url;
         base_image.onload = async () => {
             ctx.width=180;
             ctx.height=180;
@@ -146,13 +149,17 @@ const Ruleta = () => {
 
     const cleanRoulette = async () => {
         try {
-
             await setBtnState(true);
             const its = await getItems();
             await restartItems(its);
         } catch (error) {
             console.log(`ERROR =>`, error.message)
         }
+    }
+
+    const saveItem = async () => {
+        await itemService.changeStatusItems(item, false);
+        cleanRoulette()
     }
 
     const scalePreserveAspectRatio = (imgW,imgH,maxW,maxH) => (Math.min((maxW/imgW),(maxH/imgH)));
@@ -189,6 +196,9 @@ const Ruleta = () => {
         drawRouletteWheel()
     }, [items]);
 
+    const test = () => {
+        console.log(1)
+    }
     
 
     return (
@@ -199,14 +209,28 @@ const Ruleta = () => {
                 width="500"
                 height="500"
             ></canvas>
-            {btnState?<button
-                className={"button--primary"}
-                onClick={() => spin()}
-            >Girar</button>:
-            <button
-                className={"button--primary"}
-                onClick={() => cleanRoulette()}
-            >Limpiar</button>}
+            <ButtonToolbar>
+                {
+                    btnState ?
+                    <Button
+                        variant="success"
+                        onClick={() => spin()}
+                        active={false}
+                    >Girar</Button>:
+                    <ToggleButtonGroup type="checkbox">
+                        <Button 
+                            variant="warning" 
+                            onClick={cleanRoulette}
+                        >Limpiar</Button>
+                        <Button 
+                            variant="success" 
+                            onClick={saveItem}
+                        >Guardar</Button>
+                    </ToggleButtonGroup>
+                }
+            </ButtonToolbar>
+
+            
         </div>
     )
 }
